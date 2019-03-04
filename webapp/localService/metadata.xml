@@ -1,0 +1,100 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<edmx:Edmx xmlns:edmx="http://schemas.microsoft.com/ado/2007/06/edmx" Version="1.0" xmlns:sap="http://www.sap.com/Protocols/SAPData"
+	xmlns:ux="http://www.sap.com/Protocols/OData4SAP/UX" xmlns:gp="http://www.sap.com/Protocols/SAPData/GenericPlayer">
+	<edmx:Reference xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx"
+		Uri="https://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Core.V1.xml"><edmx:Include Alias="Core" Namespace="Org.OData.Core.V1"/></edmx:Reference>
+	<edmx:Reference xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx"
+		Uri="https://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Measures.V1.xml"><edmx:Include Alias="Measures" Namespace="Org.OData.Measures.V1"/></edmx:Reference>
+	<edmx:Reference xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx"
+		Uri="https://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Capabilities.V1.xml"><edmx:Include Alias="Capabilities" Namespace="Org.OData.Capabilities.V1"/></edmx:Reference>
+	<edmx:Reference xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx"
+		Uri="https://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Aggregation.V1.xml"><edmx:Include Alias="Aggregation" Namespace="Org.OData.Aggregation.V1"/></edmx:Reference>
+	<edmx:Reference xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx"
+		Uri="https://wiki.scn.sap.com/wiki/download/attachments/462030211/Analytics.xml?api=v2"><edmx:Include Alias="Analytics" Namespace="com.sap.vocabularies.Analytics.v1"/></edmx:Reference>
+	<edmx:Reference xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx"
+		Uri="https://wiki.scn.sap.com/wiki/download/attachments/448470974/Common.xml?api=v2"><edmx:Include Alias="Common" Namespace="com.sap.vocabularies.Common.v1"/></edmx:Reference>
+	<edmx:Reference xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx"
+		Uri="https://wiki.scn.sap.com/wiki/download/attachments/448470971/Communication.xml?api=v2"><edmx:Include Alias="Communication" Namespace="com.sap.vocabularies.Communication.v1"/></edmx:Reference>
+	<edmx:Reference xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx"
+		Uri="https://wiki.scn.sap.com/wiki/download/attachments/448470968/UI.xml?api=v2"><edmx:Include Alias="UI" Namespace="com.sap.vocabularies.UI.v1"/></edmx:Reference>
+	<edmx:DataServices m:DataServiceVersion="2.0" xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
+		<Schema Namespace="ControlService" xmlns="http://schemas.microsoft.com/ado/2008/09/edm">
+			<EntityType Name="Control">
+				<Key><PropertyRef Name="ID"/></Key><Property Name="modifiedAt" Type="Edm.DateTimeOffset" ConcurrencyMode="Fixed"/><Property Name="createdAt" Type="Edm.DateTimeOffset"/><Property Name="createdBy" Type="Edm.String" MaxLength="255"/><Property Name="modifiedBy" Type="Edm.String" MaxLength="255"/><Property Name="ID" Type="Edm.String" Nullable="false"/><Property Name="name" Type="Edm.String"/><Property Name="validFrom" Type="Edm.DateTime" sap:display-format="Date"/><Property Name="validTo" Type="Edm.DateTime" sap:display-format="Date"/><Property Name="description" Type="Edm.String"/><Property Name="controlGroup_ID" Type="Edm.String" MaxLength="3"/><Property Name="riskLevel_ID" Type="Edm.String" MaxLength="3"/><Property Name="significance_ID" Type="Edm.String" MaxLength="3"/><Property Name="operationFrequency_ID" Type="Edm.String" MaxLength="3"/><NavigationProperty Name="controlGroup" Relationship="ControlService.Control_controlGroup" FromRole="Control" ToRole="ControlGroup"/><NavigationProperty Name="riskLevel" Relationship="ControlService.Control_riskLevel" FromRole="Control" ToRole="RiskLevel"/><NavigationProperty Name="significance" Relationship="ControlService.Control_significance" FromRole="Control" ToRole="Significance"/><NavigationProperty Name="operationFrequency" Relationship="ControlService.Control_operationFrequency" FromRole="Control"
+					ToRole="OperationFrequency"/><NavigationProperty Name="owners" Relationship="ControlService.ControlOwners_control" FromRole="Control" ToRole="ControlOwners"/></EntityType>
+			<EntityType Name="ControlOwners">
+				<Key><PropertyRef Name="ID"/></Key><Property Name="ID" Type="Edm.Int32" Nullable="false"/><Property Name="name" Type="Edm.String"/><Property Name="email" Type="Edm.String"/><Property Name="control_ID" Type="Edm.String"/><NavigationProperty Name="control" Relationship="ControlService.ControlOwners_control" FromRole="ControlOwners" ToRole="Control"/></EntityType>
+			<EntityType Name="ControlGroup">
+				<Key><PropertyRef Name="ID"/></Key><Property Name="ID" Type="Edm.String" Nullable="false" MaxLength="3"/><Property Name="name" Type="Edm.String"/></EntityType>
+			<EntityType Name="RiskLevel">
+				<Key><PropertyRef Name="ID"/></Key><Property Name="ID" Type="Edm.String" Nullable="false" MaxLength="3"/><Property Name="name" Type="Edm.String"/></EntityType>
+			<EntityType Name="Significance">
+				<Key><PropertyRef Name="ID"/></Key><Property Name="ID" Type="Edm.String" Nullable="false" MaxLength="3"/><Property Name="name" Type="Edm.String"/></EntityType>
+			<EntityType Name="OperationFrequency">
+				<Key><PropertyRef Name="ID"/></Key><Property Name="ID" Type="Edm.String" Nullable="false" MaxLength="3"/><Property Name="name" Type="Edm.String"/></EntityType>
+			<Association Name="Control_controlGroup"><End Type="ControlService.Control" Multiplicity="*" Role="Control"/><End Type="ControlService.ControlGroup" Multiplicity="0..1" Role="ControlGroup"/>
+				<ReferentialConstraint>
+					<Principal Role="ControlGroup"><PropertyRef Name="ID"/></Principal>
+					<Dependent Role="Control"><PropertyRef Name="controlGroup_ID"/></Dependent>
+				</ReferentialConstraint>
+			</Association>
+			<Association Name="Control_riskLevel"><End Type="ControlService.Control" Multiplicity="*" Role="Control"/><End Type="ControlService.RiskLevel" Multiplicity="0..1" Role="RiskLevel"/>
+				<ReferentialConstraint>
+					<Principal Role="RiskLevel"><PropertyRef Name="ID"/></Principal>
+					<Dependent Role="Control"><PropertyRef Name="riskLevel_ID"/></Dependent>
+				</ReferentialConstraint>
+			</Association>
+			<Association Name="Control_significance"><End Type="ControlService.Control" Multiplicity="*" Role="Control"/><End Type="ControlService.Significance" Multiplicity="0..1" Role="Significance"/>
+				<ReferentialConstraint>
+					<Principal Role="Significance"><PropertyRef Name="ID"/></Principal>
+					<Dependent Role="Control"><PropertyRef Name="significance_ID"/></Dependent>
+				</ReferentialConstraint>
+			</Association>
+			<Association Name="Control_operationFrequency"><End Type="ControlService.Control" Multiplicity="*" Role="Control"/><End Type="ControlService.OperationFrequency" Multiplicity="0..1" Role="OperationFrequency"/>
+				<ReferentialConstraint>
+					<Principal Role="OperationFrequency"><PropertyRef Name="ID"/></Principal>
+					<Dependent Role="Control"><PropertyRef Name="operationFrequency_ID"/></Dependent>
+				</ReferentialConstraint>
+			</Association>
+			<Association Name="ControlOwners_control"><End Type="ControlService.ControlOwners" Multiplicity="*" Role="ControlOwners"/><End Type="ControlService.Control" Multiplicity="0..1" Role="Control"/>
+				<ReferentialConstraint>
+					<Principal Role="Control"><PropertyRef Name="ID"/></Principal>
+					<Dependent Role="ControlOwners"><PropertyRef Name="control_ID"/></Dependent>
+				</ReferentialConstraint>
+			</Association>
+			<EntityContainer Name="EntityContainer" m:IsDefaultEntityContainer="true"><EntitySet Name="Control" EntityType="ControlService.Control"/><EntitySet Name="ControlOwners" EntityType="ControlService.ControlOwners"/><EntitySet Name="ControlGroup" EntityType="ControlService.ControlGroup"/><EntitySet Name="RiskLevel" EntityType="ControlService.RiskLevel"/><EntitySet Name="Significance" EntityType="ControlService.Significance"/><EntitySet Name="OperationFrequency" EntityType="ControlService.OperationFrequency"/>
+				<AssociationSet Name="Control_controlGroup" Association="ControlService.Control_controlGroup"><End EntitySet="Control" Role="Control"/><End EntitySet="ControlGroup" Role="ControlGroup"/></AssociationSet>
+				<AssociationSet Name="Control_riskLevel" Association="ControlService.Control_riskLevel"><End EntitySet="Control" Role="Control"/><End EntitySet="RiskLevel" Role="RiskLevel"/></AssociationSet>
+				<AssociationSet Name="Control_significance" Association="ControlService.Control_significance"><End EntitySet="Control" Role="Control"/><End EntitySet="Significance" Role="Significance"/></AssociationSet>
+				<AssociationSet Name="Control_operationFrequency" Association="ControlService.Control_operationFrequency"><End EntitySet="Control" Role="Control"/><End EntitySet="OperationFrequency" Role="OperationFrequency"/></AssociationSet>
+				<AssociationSet Name="ControlOwners_control" Association="ControlService.ControlOwners_control"><End EntitySet="ControlOwners" Role="ControlOwners"/><End EntitySet="Control" Role="Control"/></AssociationSet>
+			</EntityContainer>
+			<Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="ControlService.Control/modifiedAt"><Annotation xmlns="http://docs.oasis-open.org/odata/ns/edm" Term="UI.HiddenFilter" Bool="true"/><Annotation xmlns="http://docs.oasis-open.org/odata/ns/edm" Term="Common.Label" String="Changed On"/><Annotation xmlns="http://docs.oasis-open.org/odata/ns/edm" Term="Core.Immutable" Bool="true"/></Annotations>
+			<Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="ControlService.Control/createdAt"><Annotation xmlns="http://docs.oasis-open.org/odata/ns/edm" Term="UI.HiddenFilter" Bool="true"/><Annotation xmlns="http://docs.oasis-open.org/odata/ns/edm" Term="Common.Label" String="Created On"/><Annotation xmlns="http://docs.oasis-open.org/odata/ns/edm" Term="Core.Immutable" Bool="true"/></Annotations>
+			<Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="ControlService.Control/createdBy"><Annotation xmlns="http://docs.oasis-open.org/odata/ns/edm" Term="UI.HiddenFilter" Bool="true"/><Annotation xmlns="http://docs.oasis-open.org/odata/ns/edm" Term="Common.Label" String="Created By"/><Annotation xmlns="http://docs.oasis-open.org/odata/ns/edm" Term="Core.Immutable" Bool="true"/></Annotations>
+			<Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="ControlService.Control/modifiedBy"><Annotation xmlns="http://docs.oasis-open.org/odata/ns/edm" Term="UI.HiddenFilter" Bool="true"/><Annotation xmlns="http://docs.oasis-open.org/odata/ns/edm" Term="Common.Label" String="Changed By"/><Annotation xmlns="http://docs.oasis-open.org/odata/ns/edm" Term="Core.Immutable" Bool="true"/></Annotations>
+			<Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="ControlService.Control/ID"><Annotation xmlns="http://docs.oasis-open.org/odata/ns/edm" Term="Common.Label" String="ID"/></Annotations>
+			<Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="ControlService.Control/name"><Annotation xmlns="http://docs.oasis-open.org/odata/ns/edm" Term="Common.Label" String="ID"/></Annotations>
+			<Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="ControlService.Control/validFrom"><Annotation xmlns="http://docs.oasis-open.org/odata/ns/edm" Term="Common.Label" String="validFrom"/></Annotations>
+			<Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="ControlService.Control/validTo"><Annotation xmlns="http://docs.oasis-open.org/odata/ns/edm" Term="Common.Label" String="validTo"/></Annotations>
+			<Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="ControlService.Control/description"><Annotation xmlns="http://docs.oasis-open.org/odata/ns/edm" Term="Common.Label" String="description"/></Annotations>
+			<Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="ControlService.Control/controlGroup"><Annotation xmlns="http://docs.oasis-open.org/odata/ns/edm" Term="Common.Label" String="controlGroup"/></Annotations>
+			<Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="ControlService.Control/riskLevel"><Annotation xmlns="http://docs.oasis-open.org/odata/ns/edm" Term="Common.Label" String="riskLevel"/></Annotations>
+			<Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="ControlService.Control/significance"><Annotation xmlns="http://docs.oasis-open.org/odata/ns/edm" Term="Common.Label" String="significance"/></Annotations>
+			<Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="ControlService.Control/operationFrequency"><Annotation xmlns="http://docs.oasis-open.org/odata/ns/edm" Term="Common.Label" String="operationFrequency"/></Annotations>
+			<Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="ControlService.Control/owners"><Annotation xmlns="http://docs.oasis-open.org/odata/ns/edm" Term="Common.Label" String="owners"/></Annotations>
+			<Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="ControlService.Control/controlGroup_ID"><Annotation xmlns="http://docs.oasis-open.org/odata/ns/edm" Term="Common.Label" String="controlGroup"/></Annotations>
+			<Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="ControlService.Control/riskLevel_ID"><Annotation xmlns="http://docs.oasis-open.org/odata/ns/edm" Term="Common.Label" String="riskLevel"/></Annotations>
+			<Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="ControlService.Control/significance_ID"><Annotation xmlns="http://docs.oasis-open.org/odata/ns/edm" Term="Common.Label" String="significance"/></Annotations>
+			<Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="ControlService.Control/operationFrequency_ID"><Annotation xmlns="http://docs.oasis-open.org/odata/ns/edm" Term="Common.Label" String="operationFrequency"/></Annotations>
+			<Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="ControlService.ControlGroup/ID"><Annotation xmlns="http://docs.oasis-open.org/odata/ns/edm" Term="Common.Text" Path="name"/><Annotation xmlns="http://docs.oasis-open.org/odata/ns/edm" Term="Common.Label" String="ID"/></Annotations>
+			<Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="ControlService.ControlGroup/name"><Annotation xmlns="http://docs.oasis-open.org/odata/ns/edm" Term="Common.Label" String="groupName"/></Annotations>
+			<Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="ControlService.RiskLevel/ID"><Annotation xmlns="http://docs.oasis-open.org/odata/ns/edm" Term="Common.Text" Path="name"/><Annotation xmlns="http://docs.oasis-open.org/odata/ns/edm" Term="Common.Label" String="ID"/></Annotations>
+			<Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="ControlService.RiskLevel/name"><Annotation xmlns="http://docs.oasis-open.org/odata/ns/edm" Term="Common.Label" String="riskLevelName"/></Annotations>
+			<Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="ControlService.Significance/ID"><Annotation xmlns="http://docs.oasis-open.org/odata/ns/edm" Term="Common.Text" Path="name"/><Annotation xmlns="http://docs.oasis-open.org/odata/ns/edm" Term="Common.Label" String="ID"/></Annotations>
+			<Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="ControlService.Significance/name"><Annotation xmlns="http://docs.oasis-open.org/odata/ns/edm" Term="Common.Label" String="significanceName"/></Annotations>
+			<Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="ControlService.OperationFrequency/ID"><Annotation xmlns="http://docs.oasis-open.org/odata/ns/edm" Term="Common.Text" Path="name"/><Annotation xmlns="http://docs.oasis-open.org/odata/ns/edm" Term="Common.Label" String="ID"/></Annotations>
+			<Annotations xmlns="http://docs.oasis-open.org/odata/ns/edm" Target="ControlService.OperationFrequency/name"><Annotation xmlns="http://docs.oasis-open.org/odata/ns/edm" Term="Common.Label" String="operationFrqName"/></Annotations>
+		</Schema>
+	</edmx:DataServices>
+</edmx:Edmx>
